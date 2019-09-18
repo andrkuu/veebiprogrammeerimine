@@ -5,6 +5,8 @@
 	$userName = "Andreas Kuuskaru";
 	$fullTimeNow = date("d.m.Y");
 
+	$photoTypesAllowed = ["image/jpeg","image/png"];
+
     $hourNow = date("H");
     $partOfDay = "hägune aeg";
 
@@ -47,6 +49,16 @@
     $photoList = array_diff($photoList, array(".", "..") );
     $photoCount = sizeof($photoList);
     $photoList = array_values($photoList);
+
+    foreach ($photoList as $photo) {
+
+        $fullDir = $photoDir."/".$photo;
+       $fileInfo = getimagesize($photoDir."/".$photo);
+       if (!in_array($fileInfo["mime"],$photoTypesAllowed)){
+           array_pop($photoList,$photo);
+       }
+
+    }
 
 ?>
 

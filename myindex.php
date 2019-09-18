@@ -45,6 +45,7 @@
 
     $photoList = scandir($photoDir);
     $photoList = array_diff($photoList, array(".", "..") );
+    $photoCount = sizeof($photoList);
     $photoList = array_values($photoList);
 
 ?>
@@ -68,7 +69,14 @@
         //print_r( $semesterStart["timezone"]);
         $randompic = $photoList[rand(0,sizeof($photoList)-1)];
         //echo($photoList[rand(0,sizeof($photoList)-1)]);
-        echo("<img src=\"pildid/".$randompic."\" alt=\"penguins paradise\">")
+        if ($photoCount > 0){
+            echo("<img src=\"pildid/".$randompic."\" alt=\"penguins paradise\">");
+        }
+        else
+        {
+            echo("POLE ÜHTEGI PILTI");
+        }
+
 	?>
 
 </body>

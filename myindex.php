@@ -44,7 +44,7 @@
     //juhusliku foto kasutamine
 
     $photoList = scandir($photoDir);
-    $photoList = array_diff( scandir($photoDir), array(".", "..") );
+    $photoList = array_diff($photoList, array(".", "..") );
     $photoList = array_values($photoList);
 
 ?>

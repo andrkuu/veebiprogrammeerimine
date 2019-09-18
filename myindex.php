@@ -55,10 +55,11 @@
         $fullDir = $photoDir."/".$photo;
        $fileInfo = getimagesize($photoDir."/".$photo);
        if (!in_array($fileInfo["mime"],$photoTypesAllowed)){
-           array_pop($photoList,$photo);
+           unset($photoList[$photo]);
        }
 
     }
+    var_dump($photoList);
 
 ?>
 

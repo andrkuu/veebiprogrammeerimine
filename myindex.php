@@ -1,4 +1,7 @@
 <?php
+
+    $photoDir = "pildid";
+
 	$userName = "Andreas Kuuskaru";
 	$fullTimeNow = date("d.m.Y");
 
@@ -38,8 +41,12 @@
     $semesterInfoHtml .= ' </meter>';
     $semesterInfoHtml .= "</p>";
 
+    //juhusliku foto kasutamine
 
-//var_dump($fromSemesterStart -> days);
+    $photoList = scandir($photoDir);
+    $photoList = array_diff( scandir($photoDir), array(".", "..") );
+    $photoList = array_values($photoList);
+
 ?>
 
 <!DOCTYPE html>
@@ -59,11 +66,11 @@
         echo "<p>Lehe avamise hetkel oli " .$fullTimeNow .", " .$partOfDay .".</p>";
         //print_r($semesterStart);
         //print_r( $semesterStart["timezone"]);
-
+        $randompic = $photoList[rand(0,sizeof($photoList)-1)];
+        //echo($photoList[rand(0,sizeof($photoList)-1)]);
+        echo("<img src=\"pildid/".$randompic."\" alt=\"penguins paradise\">")
 	?>
 
-    <hr>
-    <img src="pildid/Tux.png" alt="juhuslik foto">
 </body>
 
 </html>

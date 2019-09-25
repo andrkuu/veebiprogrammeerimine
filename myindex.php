@@ -1,5 +1,7 @@
 <?php
-
+    require("../../config.php");
+    require("./getsql.php");
+	    
     $photoDir = "pildid";
 
 	$userName = "Andreas Kuuskaru";
@@ -59,7 +61,7 @@
        }
 
     }
-    var_dump($photoList);
+    
 
 ?>
 
@@ -91,6 +93,28 @@
         }
 
 	?>
+
+        <form method="post">
+            <label>Filmi Pealkiri</label>
+            <input type="text" name="filmTitle">
+            <br>
+            <label>Filmi tootmisaasta</label>
+            <input type="number" min="1912" max="2019" value="2019" name="filmYear">
+            <br>
+            <label>Filmi kestus (min)</label>
+            <input type="number" min="1" max="300" value="80" name="filmDuration">
+            <br>
+            <label>Filmi zanr</label>
+            <input type="text" name="filmGenre">
+            <br>
+            <label>Filmi Stuudio</label>
+            <input type="text" name="filmStudio">
+            <br>
+            <label>Filmi Lavastaja</label>
+            <input type="text" name="filmDirector">
+            <br>
+            <input type="submit" value="Talleta filmi info" name="submitFilm">
+        </form>
 
 </body>
 

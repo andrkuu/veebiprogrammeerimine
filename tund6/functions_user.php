@@ -1,7 +1,11 @@
 <?php
+
+session_start();
+
 function signUp($name, $surname, $email, $gender, $birthDate, $password){
 	$notice = null;
 	$conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+
 	$stmt = $conn->prepare("INSERT INTO vpusers (firstname, lastname, birthdate, gender, email, password) VALUES(?,?,?,?,?,?)");
 	echo $conn->error;
 	
@@ -22,7 +26,7 @@ function signUp($name, $surname, $email, $gender, $birthDate, $password){
 	return $notice;
 }
 
-  function signIn($email, $password){
+function signIn($email, $password){
 	$notice = "";
 	$conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
 	$stmt = $conn->prepare("SELECT password FROM vpusers WHERE email=?");
@@ -36,14 +40,20 @@ function signUp($name, $surname, $email, $gender, $birthDate, $password){
 		if(password_verify($password, $passwordFromDb)){
 		  //kui salasõna klapib
 		  $stmt->close();
-		  $stmt = $conn->prepare("SELECT firstname, lastname FROM vpusers WHERE email=?");
+		  $stmt = $conn->prepare("SELECT id,firstname, lastname FROM vpusers WHERE email=?");
 		  echo $conn->error;
 		  $stmt->bind_param("s", $email);
-		  $stmt->bind_result($firstnameFromDb, $lastnameFromDb);
+		  $stmt->bind_result($idFromDb,$firstnameFromDb, $lastnameFromDb);
 		  $stmt->execute();
 		  $stmt->fetch();
 		  //Enne sisselogitud lehtedele jõudmist, sulgeme andmebaasi ühendused
 		  $notice = "Sisse logis " .$firstnameFromDb ." " .$lastnameFromDb ."!";
+
+
+		  //Salvestame kasutaja info sessioonimuutujasse
+          $_SESSION["userFirstName"] = $firstnameFromDb;
+          $_SESSION["userLastName"] = $lastnameFromDb;
+          $_SESSION["userId"] = $idFromDb;
 
 		  $stmt->close();
 		  $conn->close();
@@ -69,3 +79,73 @@ function signUp($name, $surname, $email, $gender, $birthDate, $password){
 	$conn->close();
 	return $notice;
   }//sisselogimine lõppeb
+
+function saveInfo($description, $bgcolor, $textcolor){
+    $notice = "";
+    $notice = null;
+    $conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+
+
+    $stmt = $conn->prepare("DELETE FROM vpuserprofiles WHERE userid=?");
+
+    $stmt->bind_param("i", $_SESSION["userId"]);
+
+    if($stmt->execute()){
+        //$notice = "Info eemaldamine!";
+    } else {
+        $notice = "Kasutaja info eemaldamisel tekkis tehniline tõrge: " .$stmt->error;
+    }
+    
+
+    $stmt = $conn->prepare("INSERT INTO vpuserprofiles (userid, description, bgcolor, txtcolor, picture) VALUES(?,?,?,?,?)");
+
+
+    echo $conn->error;
+
+
+    $stmt->bind_param("isssi", $_SESSION["userId"], $description, $bgcolor, $textcolor, $picture);
+
+    if($stmt->execute()){
+        $notice = "Info salvestamine õnnestus!";
+    } else {
+        $notice = "Kasutaja info salvestamisel tekkis tehniline tõrge: " .$stmt->error;
+    }
+
+    $stmt->close();
+    $conn->close();
+    return $notice;
+}
+
+function getInfo($userId){
+    $conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+
+
+    $stmt = $conn->prepare("SELECT description,bgcolor, txtcolor FROM vpuserprofiles WHERE userid=?");
+    echo $conn->error;
+    $stmt->bind_param("s", $userId);
+    $stmt->bind_result($description,$bgColor, $txtColor);
+    $stmt->execute();
+    $stmt->fetch();
+
+    $_SESSION["bgColor"] = $bgColor;
+    $_SESSION["txtColor"] = $txtColor;
+    $_SESSION["description"] = $description;
+
+    $result["bgColor"] = $bgColor;
+    $result["txtColor"] = $txtColor;
+    $result["description"] = $description;
+
+    $stmt->close();
+    $conn->close();
+
+    /*
+    if($stmt->execute()){
+        $notice = "Info lugemine õnnestus!";
+
+        print_r($result);
+    } else {
+        $notice = "Kasutaja info salvestamisel tekkis tehniline tõrge: " .$stmt->error;
+    }*/
+
+    return $result;
+}

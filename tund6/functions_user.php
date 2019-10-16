@@ -80,35 +80,44 @@ function signIn($email, $password){
 	return $notice;
   }//sisselogimine lõppeb
 
-function saveInfo($description, $bgcolor, $textcolor){
+function saveInfo($description, $bgColor, $txtColor){
+
     $notice = "";
-    $notice = null;
     $conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
-
-
-    $stmt = $conn->prepare("DELETE FROM vpuserprofiles WHERE userid=?");
-
-    $stmt->bind_param("i", $_SESSION["userId"]);
-
-    if($stmt->execute()){
-        //$notice = "Info eemaldamine!";
-    } else {
-        $notice = "Kasutaja info eemaldamisel tekkis tehniline tõrge: " .$stmt->error;
-    }
-    
-
-    $stmt = $conn->prepare("INSERT INTO vpuserprofiles (userid, description, bgcolor, txtcolor, picture) VALUES(?,?,?,?,?)");
-
-
+    $stmt = $conn->prepare("SELECT id FROM vpuserprofiles WHERE userid=?");
     echo $conn->error;
+    $stmt->bind_param("i", $_SESSION["userId"]);
+    $stmt->bind_result($idFromDb);
+    $stmt->execute();
 
+    if($stmt->fetch()){
+        //profiil juba olemas, uuendame
 
-    $stmt->bind_param("isssi", $_SESSION["userId"], $description, $bgcolor, $textcolor, $picture);
-
-    if($stmt->execute()){
-        $notice = "Info salvestamine õnnestus!";
+        $stmt->close();
+        $stmt = $conn->prepare("UPDATE vpuserprofiles SET description = ?, bgcolor = ?, txtcolor = ? WHERE userid=?");
+        echo $conn->error;
+        $stmt->bind_param("sssi", $description, $bgColor, $txtColor, $_SESSION["userId"]);
+        if($stmt->execute()){
+            $_SESSION["bgColor"] = $bgColor;
+            $_SESSION["txtColor"] = $txtColor;
+            $notice = "Profiil edukalt uuendatud!";
+        } else {
+            $notice = "Profiili uuendamisel tekkis tõrge! " .$stmt->error;
+        }
     } else {
-        $notice = "Kasutaja info salvestamisel tekkis tehniline tõrge: " .$stmt->error;
+        $stmt = $conn->prepare("INSERT INTO vpuserprofiles (userid, description, bgcolor, txtcolor, picture) VALUES(?,?,?,?,?)");
+
+
+        echo $conn->error;
+
+
+        $stmt->bind_param("isssi", $_SESSION["userId"], $description, $bgcolor, $textcolor, $picture);
+
+        if($stmt->execute()){
+            $notice = "Info salvestamine õnnestus!";
+        } else {
+            $notice = "Kasutaja info salvestamisel tekkis tehniline tõrge: " .$stmt->error;
+        }
     }
 
     $stmt->close();

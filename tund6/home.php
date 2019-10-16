@@ -25,4 +25,5 @@ echo "<h1>" . $userName . ", veebiprogrammeerimine 2019</h1>";
 ?>
 <p>Olete sisseloginud! Logi <a href="?logout=1">välja</a></p>
 <p><a href="userprofile.php">Profiil</a></p>
+<p><a href="messages.php">Sõnumid</a></p>
 <p>See veebileht on valminud õppetöö käigus ning ei sisalda mingisugust tõsiseltvõetavat sisu!</p>

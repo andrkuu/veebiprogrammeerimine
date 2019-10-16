@@ -158,3 +158,20 @@ function getInfo($userId){
 
     return $result;
 }
+
+function readUserData($userId){
+    $notice = null;
+    $conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+
+    $stmt = $conn->prepare("SELECT firstname,lastname,birthdate,gender,email,created FROM vpusers WHERE id=?");
+    echo $conn->error;
+    $stmt->bind_param("s", $userId);
+    //$stmt->bind_result($description,$bgColor, $txtColor);
+    $stmt->execute();
+    $notice = $stmt->fetch();
+
+
+    $stmt->close();
+    $conn->close();
+    return $notice;
+}

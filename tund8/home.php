@@ -27,4 +27,5 @@ echo "<h1>" . $userName . ", veebiprogrammeerimine 2019</h1>";
 <p><a href="userprofile.php">Profiil</a></p>
 <p><a href="messages.php">Sõnumid</a></p>
 <p><a href="changeuser.php">Andmete vahetus</a></p>
+<p><a href="picupload.php">Pildi üleslaadimine</a></p>
 <p>See veebileht on valminud õppetöö käigus ning ei sisalda mingisugust tõsiseltvõetavat sisu!</p>

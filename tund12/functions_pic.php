@@ -50,7 +50,7 @@ function showPics($privacy, $page, $limit)
 
             $picHTML .= "<p>Keskmine hinne: ".round($avgFromDb,2)."</p>";
         }
-        $picHTML .= "<p>Autor: ".$fistNameFromDb." ".$lastNameFromDb."</p>";
+        $picHTML .= "<p>Üleslaadija: ".$fistNameFromDb." ".$lastNameFromDb."</p>";
 
     }
     if($picHTML == null){

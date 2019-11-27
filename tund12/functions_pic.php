@@ -24,11 +24,11 @@ function showPics($privacy, $page, $limit)
     $conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
     //$stmt = $conn->prepare("SELECT filename, alttext FROM vpphotos2 WHERE privacy<=? AND deleted IS NULL");
 
-    $stmt = $conn->prepare("SELECT vpphotos.id, vpphotos.filename, vpphotos.alttext, AVG(vpphotoratings.rating) as AvgValue FROM vpphotos JOIN vpusers ON vpphotos.userid = vpusers.id LEFT JOIN vpphotoratings ON vpphotoratings.photoid = vpphotos.id WHERE vpphotos.privacy <= 2 AND deleted IS NULL GROUP BY vpphotos.id");
+    $stmt = $conn->prepare("SELECT vpusers.firstname, vpusers.lastname, vpphotos.id, vpphotos.filename, vpphotos.alttext, AVG(vpphotoratings.rating) as AvgValue FROM vpphotos JOIN vpusers ON vpphotos.userid = vpusers.id LEFT JOIN vpphotoratings ON vpphotoratings.photoid = vpphotos.id WHERE vpphotos.privacy <= 2 AND deleted IS NULL GROUP BY vpphotos.id");
     #$stmt = $conn->prepare("SELECT id, filename, alttext FROM vpphotos WHERE privacy<=? AND deleted IS NULL ORDER BY id DESC LIMIT ?,?");
     echo $conn->error;
     #$stmt->bind_param("iis", $privacy, $skip, $limit);
-    $stmt->bind_result($photoIdFromDb,$fileNameFromDb, $altTextFromDb, $avgFromDb);
+    $stmt->bind_result($fistNameFromDb, $lastNameFromDb, $photoIdFromDb,$fileNameFromDb, $altTextFromDb, $avgFromDb);
 
 
     $stmt->execute();
@@ -50,7 +50,7 @@ function showPics($privacy, $page, $limit)
 
             $picHTML .= "<p>Keskmine hinne: ".round($avgFromDb,2)."</p>";
         }
-
+        $picHTML .= "<p>Autor: ".$fistNameFromDb." ".$lastNameFromDb."</p>";
 
     }
     if($picHTML == null){

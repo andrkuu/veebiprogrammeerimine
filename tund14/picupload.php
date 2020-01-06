@@ -6,6 +6,9 @@
   //require("classes/Test.class.php");
   require("classes/Picupload.class.php");
 
+
+    require("classes/Session.class.php");
+    SessionManager::sessionStart("vp",0,"/~andrekuu/","localhost");
   
   //kui pole sisseloginud
   if(!isset($_SESSION["userId"])){

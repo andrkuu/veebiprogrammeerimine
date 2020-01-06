@@ -4,6 +4,10 @@
   require("functions_user.php");
   require("functions_film.php");
   $database = "if19_inga_pe_4";
+
+
+    require("classes/Session.class.php");
+    SessionManager::sessionStart("vp",0,"/~andrekuu/","localhost");
   
   //kui pole sisseloginud
   if(!isset($_SESSION["userId"])){

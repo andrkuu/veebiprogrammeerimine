@@ -3,6 +3,9 @@
   require("functions_user.php");
   require("functions_pic.php");
 
+    require("classes/Session.class.php");
+    SessionManager::sessionStart("vp",0,"/~andrekuu/","localhost");
+
   
   //kui pole sisseloginud
   if(!isset($_SESSION["userId"])){
@@ -17,14 +20,27 @@
 	  header("Location: myindex.php");
 	  exit();
   }
+    $privacy = 1;
+    if(isset($_POST["public"])){
+        $privacy = 1;
+    }
+
+    if(isset($_POST["private"])){
+        $privacy = 2;
+    }
+
+    if(isset($_POST["personal"])){
+        $privacy = 3;
+    }
 
 $userName = $_SESSION["userFirstname"] ." " .$_SESSION["userLastname"];
 
 $notice = null;
 
 $page = 1;
-$limit = 5;
-$picCount = countPics(2);
+$limit = 2;
+#$privacy = 3;
+$picCount = countPics($privacy);
 if(!isset($_GET["page"]) or $_GET["page"] < 1){
     $page = 1;
 } elseif (round(($_GET["page"] - 1) * $limit) >= $picCount){
@@ -33,7 +49,7 @@ if(!isset($_GET["page"]) or $_GET["page"] < 1){
     $page = round($_GET["page"]);
 }
 
-$galleryHTML = showPics(2, $page, $limit);
+$galleryHTML = showPics($privacy, $page, $limit);
 
 $toScript = "\t" .'<link rel="stylesheet" type="text/css" href="style/modal.css">' ."\n";
 $toScript .= "\t" .'<script type="text/javascript" src="javascript/gallery.js" defer></script>' ."\n";
@@ -50,6 +66,13 @@ echo "<h1>" .$userName ." koolitöö leht</h1>";
 <p><a href="?logout=1">Logi välja!</a> | Tagasi <a href="home.php">avalehele</a></p>
 <hr>
 <h2>Pildigalerii</h2>
+
+<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
+    <input type="submit" value="Avalikud" name="public">
+    <input type="submit" value="Privaatsed" name="private">
+    <input type="submit" value="Isiklikud" name="personal">
+</form>
+
 <!--Piltide näitamise modaalaken W3Schools eeskujul-->
 <div id="myModal" class="modal">
     <!--sulgemisnupp-->
@@ -68,6 +91,8 @@ echo "<h1>" .$userName ." koolitöö leht</h1>";
         <label><input type="radio" id="rate4" name="rating" value="4">4</label>
         <label><input type="radio" id="rate5" name="rating" value="5">5</label>
         <input type="button" value="Salvesta hinnang" id="storeRating">
+        <br>
+        <span id="avgRating"></span>
     </div>
 
 </div>

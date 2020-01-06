@@ -2,6 +2,10 @@
 	//GET meetodiga saadetud väärtused
     require("../../../config.php");
     //session_start();
+
+    require("classes/Session.class.php");
+    SessionManager::sessionStart("vp",0,"/~andrekuu/","localhost");
+
 	$rating = $_REQUEST["rating"];
     $photoId = $_REQUEST["photoId"];
 	$userid = $_SESSION["userId"];
@@ -12,13 +16,13 @@
     $stmt->execute();
     $stmt->close();
     //küsime uue keskmise hinde
-/*
+
     $stmt=$conn->prepare("SELECT AVG(rating)FROM vpphotoratings WHERE photoid=?");
-    $stmt->bind_param("i", $photoId);
-    $stmt->bind_result($score);
-    $stmt->execute();
-    $stmt->fetch();
-    $stmt->close();*/
-    $conn->close();
-	
-	#echo "Rating:".$rating." photoid ".$photoId." userid ".$userid;
+	$stmt->bind_param("i", $photoId);
+	$stmt->bind_result($score);
+	$stmt->execute();
+	$stmt->fetch();
+	$stmt->close();
+	$conn->close();
+	//ümardan keskmise hinde kaks kohta pärast koma ja tagastan
+	echo round($score, 2);

@@ -51,6 +51,9 @@ echo "<h1>" . $userName . ", veebiprogrammeerimine 2019</h1>";
     <li><a href="showfilminfo.php">Filmid</a></li>
     <li><a href="picupload.php">Piltide üleslaadimine</a></li>
     <li><a href="news.php">Uudised</a></li>
+    <li><a href="addfilminfo.php">Filmide lisamine</a></li>
+    <li><a href="gallery.php">Gallerii</a></li>
+
 </ul>
 
 </body>

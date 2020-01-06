@@ -4,6 +4,9 @@
 //session_start();
 //var_dump($_SESSION);
 
+
+
+
 function signUp($name, $surname, $email, $gender, $birthDate, $password){
 	$notice = null;
 	$conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
@@ -135,8 +138,58 @@ function signUp($name, $surname, $email, $gender, $birthDate, $password){
 	$conn->close();
 	return $notice;
   }
-  
-  function showMyDesc(){
+
+
+function change_password($oldpassword, $newpassword){
+    $conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
+    $stmt = $conn->prepare("SELECT password FROM vpusers WHERE id=?");
+    echo $conn->error;
+    $stmt->bind_param("i", $_SESSION["userId"]);
+    $stmt->bind_result($passwordFromDb);
+    $stmt->execute();
+
+
+    $options = ["cost" => 12, "salt" => substr(sha1(rand()), 0, 22)];
+    $newHash = password_hash($newpassword, PASSWORD_BCRYPT, $options);
+
+    if($stmt->fetch()){
+        #echo $pwdhash."<br>";
+        #echo $passwordFromDb;
+
+        if(strlen($newpassword) < 8){
+            $notice = "Liiga lühike salasõna (sisestasite ainult " .strlen($newpassword) ." märki).";
+        }else{
+            if(password_verify($oldpassword, $passwordFromDb)){
+                echo "kattuvad";
+
+                $stmt->close();
+                $stmt = $conn->prepare("UPDATE vpusers SET password = ? WHERE id=?");
+                echo $conn->error;
+                $stmt->bind_param("si", $newHash,  $_SESSION["userId"]);
+                if($stmt->execute()){
+
+                    $notice = "Parool edukalt uuendatud!";
+                } else {
+                    $notice = "Parooli uuendamisel tekkis tõrge! " .$stmt->error;
+                }
+
+
+            }
+            else{
+                $notice = "Paroolid ei kattu";#.$pwdhash. "<br>".$passwordFromDb;
+            }
+        }
+
+    }
+
+    #$notice = "Profiili salvestamisel tekkis tõrge! " .$stmt->error;
+    $stmt->close();
+    $conn->close();
+    return $notice;
+}
+
+
+function showMyDesc(){
 	$notice = null;
 	$conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
 	$stmt = $conn->prepare("SELECT description FROM vpuserprofiles WHERE userid=?");

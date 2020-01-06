@@ -4,7 +4,11 @@
   require("functions_user.php");
   require("functions_film.php");
   $database = "if19_inga_pe_4";
-  
+
+
+    require("classes/Session.class.php");
+    SessionManager::sessionStart("vp",0,"/~andrekuu/","localhost");
+
   //kui pole sisseloginud
   if(!isset($_SESSION["userId"])){
 	  //siis jõuga sisselogimise lehele
@@ -26,11 +30,20 @@
   unset($_SESSION["filmPersonAdded"]);
   unset($_SESSION["filmAdded"]);
   unset($_SESSION["filmProfessionAdded"]);
-  
-  if(isset($_POST["submit1"])){
-	 $filmInfoHTML = showFullDataByPerson();	
+
+    if(isset($_POST["filmDuration"])) {
+        $minduration = $_POST["filmDuration"];
+
+    }
+
+  if(isset($_POST["getFilmInfo"])){
+      if(isset($_POST["filmDuration"])) {
+          $minduration = $_POST["filmDuration"];
+          $filmInfoHTML = showFullDataByPerson($minduration);
+      }
+
   }//
-  $filmInfoHTML = showFullDataByPerson();
+  #$filmInfoHTML = showFullDataByPerson($minduration);
   
   require("header.php");
 ?>
@@ -44,14 +57,13 @@
   <p><a href="?logout=1">Logi välja!</a> | Tagasi <a href="home.php">avalehele</a></p>
   <h2>Eesti filmid ja filmitegelased</h2>
   <p>Lisa uut <a href="addfilminfo.php">infot</a>!</p>
-  <!--
+
   <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" style="display:inline;">
-	  <input name="sumit1" type="submit" value="Kogu info lähtudes filmitegijaist">
+	  <input name="filmDuration" type="number" value="<?php echo $minduration;?>">
+
+	  <input name="getFilmInfo" type="submit" value="Näita filme">
   </form>
-	<form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>" style="display:inline;">
-	  <input name="submitNewPassword" type="submit" value="Salvesta uus salasõna">
-	</form>
-	-->
+
 	
 	<hr>
 	<?php

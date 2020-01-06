@@ -3,7 +3,10 @@
   require("functions_main.php");
   require("functions_user.php");
 
-  
+
+    require("classes/Session.class.php");
+    SessionManager::sessionStart("vp",0,"/~andrekuu/","localhost");
+
   //kui pole sisseloginud
   if(!isset($_SESSION["userId"])){
 	  //siis jõuga sisselogimise lehele
@@ -22,7 +25,12 @@
   
   $notice = null;
   $myDescription = null;
-  
+
+    if(isset($_POST["submitPassword"])){
+        $notice = change_password($_POST["oldpassword"],$_POST["newpassword"]);
+    }
+
+
   if(isset($_POST["submitProfile"])){
 	$notice = storeUserProfile(test_input($_POST["description"]), $_POST["bgcolor"], $_POST["txtcolor"]);
 	if(!empty($_POST["description"])){
@@ -53,8 +61,11 @@
 	  <br>
 	  <label>Minu valitud taustavärv: </label><input name="bgcolor" type="color" value="<?php echo $_SESSION["bgColor"]; ?>"><br>
 	  <label>Minu valitud tekstivärv: </label><input name="txtcolor" type="color" value="<?php echo $_SESSION["txtColor"]; ?>"><br>
-	  <input name="submitProfile" type="submit" value="Salvesta profiil"><span><?php echo $notice; ?></span>
-	</form>
+      <label>Vana parool: </label><input name="oldpassword" type="password" value=""><br>
+      <label>Uus parool: </label><input name="newpassword" type="password" value=""><br>
+      <input name="submitProfile" type="submit" value="Salvesta profiil"><span><?php echo $notice; ?></span><br>
+      <input name="submitPassword" type="submit" value="Vaheta parool"><span><?php echo $notice; ?></span>
+  </form>
   
 </body>
 </html>

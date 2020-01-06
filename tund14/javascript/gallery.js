@@ -44,9 +44,11 @@ function storeRating() {
     if (rating > 0){
         //ajax
         let webRequest = new XMLHttpRequest();
-        webRequest.onreadystatechange = function () {
+        webRequest.onreadystatechange = function(){
             if(this.readyState == 4 && this.status == 200){
-                console.log(this.responseText);
+                //console.log(this.responseText);
+                document.getElementById("avgRating").innerHTML = "Keskmine hinne: " + this.responseText;
+                document.getElementById("score" + selectedPicId).innerHTML = "Hinne: " + this.responseText;
             }
         }
         webRequest.open("GET", "savepicrating.php?rating=" + rating + "&photoId="+selectedPicId, true);

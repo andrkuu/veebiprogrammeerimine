@@ -3,8 +3,8 @@
   require("functions_main.php");
   require("functions_user.php");
 
-  //require("classes/Session.class.php");
- // SessionManager::sessionStart("vp",0,"/~andrekuu/","localhost");
+  require("classes/Session.class.php");
+  SessionManager::sessionStart("vp",0,"/~andrekuu/","localhost");
   
   $notice = "";
   $email = "";
@@ -35,6 +35,14 @@
 	$semesterEnd = new DateTime("2019-12-13");
 	$semesterDuration = $semesterStart -> diff($semesterEnd);
 	$today = new DateTime("now");
+
+    $number = date('N', strtotime(date("Y-m-d")));
+
+    $days = array('Pühapäev', 'Esmaspäev', 'Teisipäev', 'Kolmapäev','Neljapäev','Reede', 'Laupäev');
+    $months = array("jaanuar", "veebruar", "märts", "aprill", "mai", "juuni", "juuli", "august", "september", "oktoober", "november", "detsember");
+
+    $monthNR = date('m');
+
 	$fromSemesterStart = $semesterStart -> diff($today);
 	$semesterInfoHTML = "<p>Info semestri kohta pole kättesaadav.</p>";
 	if ($fromSemesterStart -> format("%r%a") > 0 and $fromSemesterStart -> format("%r%a") <= $semesterDuration -> format("%r%a")){
@@ -102,7 +110,7 @@
 <?php
   echo $semesterInfoHTML;
   echo "<p>See on minu esimene PHP!</p>";
-  echo "<p>Lehe avamise hetkel oli " .$fullTimeNow .", " .$partOfDay .".</p>";
+echo "<p>Lehe avamise hetkel oli " .$fullTimeNow .", " .$partOfDay .".". $days[$number]." .".$months[intval($monthNR)-1]."</p>";
 ?>
   <hr>
   <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">

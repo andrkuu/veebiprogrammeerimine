@@ -12,6 +12,9 @@ $titleError = null;
 $contentError = null;
 $dateError = null;
 
+require("classes/Session.class.php");
+SessionManager::sessionStart("vp",0,"/~andrekuu/","localhost");
+
 if(isset($_POST["newsBtn"])) {
 
     if (isset($_POST["newsTitle"]) and !empty($_POST["newsTitle"])) {

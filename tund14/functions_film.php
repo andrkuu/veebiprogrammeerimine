@@ -2,11 +2,14 @@
   $weekdayNamesET = ["esmaspäev", "teisipäev", "kolmapäev", "neljapäev", "reede", "laupäev", "pühapäev"];
   $monthNamesET = ["jaanuar", "veebruar", "märts", "aprill", "mai", "juuni", "juuli", "august", "september", "oktoober", "november", "detsember"];
 
-  function showFullDataByPerson(){
+  function showFullDataByPerson($min_duration){
 	  $filmInfoHTML = null;
 	  $conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
-	  $stmt = $conn->prepare("SELECT AMET.Nimetus, ISIK.Eesnimi, ISIK.Perekonnanimi, ISIK.Synniaeg, ISIK_FILMIS.Roll, FILM.Pealkiri, FILM.Aasta, FILM.Kestus, FILM.Sisukokkuv6te FROM ISIK JOIN ISIK_FILMIS ON ISIK.Isik_ID = ISIK_FILMIS.ISIK_Isik_ID JOIN FILM ON FILM.Film_ID = ISIK_FILMIS.FILM_Film_ID JOIN AMET ON ISIK_FILMIS.AMET_Amet_ID = AMET.Amet_ID");
+	  $stmt = $conn->prepare("SELECT AMET.Nimetus, ISIK.Eesnimi, ISIK.Perekonnanimi, ISIK.Synniaeg, ISIK_FILMIS.Roll, FILM.Pealkiri, FILM.Aasta, FILM.Kestus, FILM.Sisukokkuv6te FROM ISIK JOIN ISIK_FILMIS ON ISIK.Isik_ID = ISIK_FILMIS.ISIK_Isik_ID JOIN FILM ON FILM.Film_ID = ISIK_FILMIS.FILM_Film_ID JOIN AMET ON ISIK_FILMIS.AMET_Amet_ID = AMET.Amet_ID WHERE FILM.Kestus > ? ORDER BY FILM.Kestus");
 	  echo $conn->error;
+
+
+	  $stmt->bind_param("i",$min_duration);
 	  $stmt->bind_result($professionFromDb, $firstnameFromDb, $lastnameFromDb, $birthFromDb, $roleFromDb, $filmTitleFromDb, $filmYearFromDb, $filmDurationFromDb, $filmSummaryFromDb);
 	  $stmt->execute();
 	  while($stmt->fetch()){

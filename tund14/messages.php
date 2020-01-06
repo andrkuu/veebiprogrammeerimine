@@ -4,7 +4,10 @@
   require("functions_user.php");
   require("functions_message.php");
 
-  
+
+    require("classes/Session.class.php");
+    SessionManager::sessionStart("vp",0,"/~andrekuu/","localhost");
+
   //kui pole sisseloginud
   if(!isset($_SESSION["userId"])){
 	  //siis jõuga sisselogimise lehele

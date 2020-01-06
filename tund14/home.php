@@ -1,10 +1,14 @@
 <?php
 require("../../../config.php");
 require("functions_main.php");
+require("functions_news.php");
 
 
 require("classes/Session.class.php");
 SessionManager::sessionStart("vp",0,"/~andrekuu/","localhost");
+
+
+$newsHTML = latestNews(1000);
 
 //kontrollime, kas on sisse loginud
 if (!isset($_SESSION["userId"])) {
@@ -55,6 +59,10 @@ echo "<h1>" . $userName . ", veebiprogrammeerimine 2019</h1>";
     <li><a href="gallery.php">Gallerii</a></li>
 
 </ul>
+
+<?php
+echo $newsHTML;
+?>
 
 </body>
 </html>

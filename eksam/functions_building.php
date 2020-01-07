@@ -69,8 +69,8 @@ function get_persons($gender,$role){
 
     $conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
     //SELECT first_name, last_name, role, gender FROM BUILDING WHERE role IN(SELECT id FROM ROLES WHERE role_name = "Oppejoud") ORDER BY last_name
-    echo "sugu:".$gender;
-    echo "roll:".$role;
+    //echo "sugu:".$gender;
+    //echo "roll:".$role;
 
     if(intval($gender) == 0){
 

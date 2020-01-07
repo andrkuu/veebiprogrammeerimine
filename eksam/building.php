@@ -56,12 +56,15 @@ echo "<h1>Hoone haldamine</h1>";
 
 <form method="POST" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]);?>">
 
+    Inimesi majas:
 
     <?php
     echo(get_count());
+
     echo(get_persons($selectedGender,$selectedRole));
 
     ?>
+    <br>
     <label>Sugu:</label>
     <select name='filter_gender' value='1'>
         <option value="0">Kõik</option>

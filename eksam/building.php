@@ -95,7 +95,6 @@ echo "<h1>Hoone haldamine</h1>";
     <input name="gender" type="radio" value = "2">Naine</input><br>
     </label>
     <br>
-    <p><a href="insert_truck.php">Lisa rolle</a>!</p>
     <br>
     <input name="submitLoad" type="submit" value="Sisesta inimene"><span></span>
 </form>

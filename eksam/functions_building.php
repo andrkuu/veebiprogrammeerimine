@@ -37,7 +37,6 @@ function get_count(){
     $stmt->execute();
 
     $stmt->fetch();
-    #$roleHTML .= "</select>";
     $stmt->close();
     $conn->close();
     return $personcount;
@@ -51,7 +50,6 @@ function get_roles(){
     echo $conn->error;
     $stmt->bind_result($idFromDb,$roleFromDb);
     $stmt->execute();
-    #$roleHTML .= "<select name='role'>";
 
 
     while($stmt->fetch()){
@@ -59,7 +57,6 @@ function get_roles(){
 
         $roleHTML .= ">" .$roleFromDb . "</option> \n";
     }
-    #$roleHTML .= "</select>";
     $stmt->close();
     $conn->close();
     return $roleHTML;
@@ -123,7 +120,6 @@ function get_persons($gender,$role){
 
     while($stmt->fetch()){
 
-        #echo("test");
         if ($gender == 1){
             $gender = "Mees";
         }elseif ($gender == 2){
@@ -144,70 +140,4 @@ function get_persons($gender,$role){
     return $truckHTML;
 }
 
-  function signIn($email, $password){
-	$notice = "";
-	$conn = new mysqli($GLOBALS["serverHost"], $GLOBALS["serverUsername"], $GLOBALS["serverPassword"], $GLOBALS["database"]);
-	$stmt = $conn->prepare("SELECT password FROM vpusers WHERE email=?");
-	echo $conn->error;
-	$stmt->bind_param("s", $email);
-	$stmt->bind_result($passwordFromDb);
-	if($stmt->execute()){
-		//kui päring õnnestus
-	  if($stmt->fetch()){
-		//kasutaja on olemas
-		if(password_verify($password, $passwordFromDb)){
-		  //kui salasõna klapib
-		  $stmt->close();
-		  $stmt = $conn->prepare("SELECT id, firstname, lastname FROM vpusers WHERE email=?");
-		  echo $conn->error;
-		  $stmt->bind_param("s", $email);
-		  $stmt->bind_result($idFromDb, $firstnameFromDb, $lastnameFromDb);
-		  $stmt->execute();
-		  $stmt->fetch();
-		  $notice = "Sisse logis " .$firstnameFromDb ." " .$lastnameFromDb ."!";
-		  
-		  //salvestame kasutaja kohta loetud info sessioonimuutujatesse
-		  $_SESSION["userId"] = $idFromDb;
-		  $_SESSION["userFirstname"] = $firstnameFromDb;
-		  $_SESSION["userLastname"] = $lastnameFromDb;
-		  
-		  //loeme kasutajaprofiili
-		  $stmt->close();
-		  $stmt = $conn->prepare("SELECT bgcolor, txtcolor FROM vpuserprofiles WHERE userid=?");
-		  echo $conn->error;
-		  $stmt->bind_param("i", $_SESSION["userId"]);
-		  $stmt->bind_result($bgColorFromDb, $txtColorFromDb);
-		  $stmt->execute();
-		  if($stmt->fetch()){
-			$_SESSION["bgColor"] = $bgColorFromDb;
-	        $_SESSION["txtColor"] = $txtColorFromDb;
-		  } else {
-		    $_SESSION["bgColor"] = "#FFFFFF";
-	        $_SESSION["txtColor"] = "#000000";
-		  }
-		  
-		  //enne sisselogitutele mõeldud lehtedele jõudmist sulgeme andmebaasi ühendused
-		  $stmt->close();
-	      $conn->close();
-		  //liigume soovitud lehele
-		  header("Location: home.php");
-		  //et siin rohkem midagi ei tehtaks
-          exit();		  
-		  
-		} else {
-		  $notice = "Vale salasõna!";
-		}//kas password_verify
-	  } else {
-		$notice = "Sellist kasutajat (" .$email .") ei leitud!";
-		//kui sellise e-mailiga ei saanud vastet (fetch ei andnud midagi), siis pole sellist kasutajat
-	  }//kas fetch õnnestus
-	} else {
-	  $notice = "Sisselogimisel tekkis tehniline viga!" .$stmt->error;
-	  //veateade, kui execute ei õnnestunud
-	}//kas execute õnnestus
-	
-	$stmt->close();
-	$conn->close();
-	return $notice;
-  }
   
